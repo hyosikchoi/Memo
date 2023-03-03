@@ -30,36 +30,39 @@ class MainActivity : ComponentActivity() {
             MemoJetpackComposeTheme {
 
                 /** 메세지 아이디 카운트 상태 */
-                val clickCount : MutableState<Int> = remember {
+                val clickCount: MutableState<Int> = remember {
                     mutableStateOf(0)
                 }
 
                 /** 전체 메세지 리스트 상태 */
-                val messageList : SnapshotStateList<Message> = remember { mutableStateListOf() }
+                val messageList: SnapshotStateList<Message> = remember { mutableStateListOf() }
 
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                   Column() {
+                    Column() {
 
-                       /** 1-1 onClicked 이벤트 발생  */
-                       AddMessage(onClicked = {
-                           clickCount.value += 1
-                           val newMsg = Message(id = clickCount.value, content = "메세지 입니다 ${clickCount.value}")
-                           /** 1-2 messageList 상태 변경 발생 */
-                           messageList.add(newMsg)
-                       })
+                        /** 1-1 onClicked 이벤트 발생  */
+                        AddMessage(onClicked = {
+                            clickCount.value += 1
+                            val newMsg = Message(
+                                id = clickCount.value,
+                                content = "메세지 입니다 ${clickCount.value}"
+                            )
+                            /** 1-2 messageList 상태 변경 발생 */
+                            messageList.add(newMsg)
+                        })
 
-                       /** 1-3 messageList 상태를 내려줍니다. */
-                       /** 2-1 onDeleteClicked 이벤트 발생 */
-                       /** 2-3 messageList 상태를 내려줍니다. */
-                       MessageList(messages = messageList, onDeleteClicked = {
-                         /** 2-2 messageList 상태 변경 발생 */
-                          messageList.remove(it)
-                       })
-                   }
+                        /** 1-3 messageList 상태를 내려줍니다. */
+                        /** 2-1 onDeleteClicked 이벤트 발생 */
+                        /** 2-3 messageList 상태를 내려줍니다. */
+                        MessageList(messages = messageList, onDeleteClicked = {
+                            /** 2-2 messageList 상태 변경 발생 */
+                            messageList.remove(it)
+                        })
+                    }
                 }
             }
         }
@@ -67,16 +70,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun AddMessage(onClicked:() -> Unit) {
+fun AddMessage(onClicked: () -> Unit) {
     Button(onClick = onClicked) {
         Text(text = "메세지 추가")
     }
 }
 
 @Composable
-fun MessageRow(msg: Message, onDeleteClicked:(Message) -> Unit) {
+fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
     Surface(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, color = Color.LightGray),
         elevation = 10.dp
@@ -93,10 +98,10 @@ fun MessageRow(msg: Message, onDeleteClicked:(Message) -> Unit) {
 }
 
 @Composable
-fun MessageList(messages: List<Message> , onDeleteClicked:(Message) -> Unit) {
+fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
     LazyColumn {
         items(messages) { message ->
-            MessageRow(msg = message , onDeleteClicked = onDeleteClicked)
+            MessageRow(msg = message, onDeleteClicked = onDeleteClicked)
         }
     }
 }
@@ -105,6 +110,24 @@ fun MessageList(messages: List<Message> , onDeleteClicked:(Message) -> Unit) {
 @Composable
 fun DefaultPreview() {
     MemoJetpackComposeTheme {
+
+        /** 전체 메세지 리스트 상태 */
+        val messageList: SnapshotStateList<Message> = remember { mutableStateListOf<Message>().apply {
+            add(
+                Message(
+                    id = 1,
+                    content = "메세지 입니다"
+                )
+            )
+        } }
+
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            MessageList(messages = messageList, onDeleteClicked = {
+                messageList.remove(it)
+            })
+        }
 
     }
 }

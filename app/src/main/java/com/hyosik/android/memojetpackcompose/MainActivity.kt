@@ -17,6 +17,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -87,10 +88,11 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
         elevation = 10.dp
     ) {
         Column(
-            Modifier.padding(16.dp)
+            Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "id : ${msg.id} / msg: ${msg.content}")
-            Button(onClick = { onDeleteClicked(msg) }) {
+            Button(onClick = { onDeleteClicked(msg) }, modifier = Modifier.padding(top = 10.dp)) {
                 Text(text = "삭제")
             }
         }

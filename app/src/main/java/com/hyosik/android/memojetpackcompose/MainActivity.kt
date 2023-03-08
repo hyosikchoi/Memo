@@ -1,6 +1,7 @@
 package com.hyosik.android.memojetpackcompose
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
@@ -43,6 +44,12 @@ class MainActivity : ComponentActivity() {
                             title = { Text(text = "메모 리스트") },
                             backgroundColor = Color.LightGray
                         )
+                    },
+                    floatingActionButtonPosition = FabPosition.End,
+                    floatingActionButton = {
+                        FloatingActionButton(onClick = { /*TODO*/ }) {
+                            Text(text = "클릭!!")
+                        }
                     }
                 ) {
                     Column() {
@@ -120,7 +127,6 @@ fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
 @Composable
 fun DefaultPreview() {
     MemoJetpackComposeTheme {
-
         /** 전체 메세지 리스트 상태 */
         val messageList: SnapshotStateList<Message> = remember {
             mutableStateListOf<Message>().apply {
@@ -140,6 +146,12 @@ fun DefaultPreview() {
                     title = { Text(text = "메모 리스트") },
                     backgroundColor = Color.LightGray
                 )
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            floatingActionButton = {
+                FloatingActionButton(onClick = { /*TODO*/ }) {
+                    Text(text = "클릭!!")
+                }
             }
         ) {
             MessageList(messages = messageList, onDeleteClicked = {

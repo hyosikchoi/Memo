@@ -11,10 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
@@ -38,13 +35,18 @@ class MainActivity : ComponentActivity() {
                 /** 전체 메세지 리스트 상태 */
                 val messageList: SnapshotStateList<Message> = remember { mutableStateListOf() }
 
-                // A surface container using the 'background' color from the theme
-                Surface(
+                // Android material design 과 흡사하다고 보면 된다.
+                Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(text = "메모 리스트") },
+                            backgroundColor = Color.LightGray
+                        )
+                    }
                 ) {
                     Column() {
-
+                        /** 1-1 onClicked 이벤트 발생  */
                         /** 1-1 onClicked 이벤트 발생  */
                         AddMessage(onClicked = {
                             clickCount.value += 1
@@ -53,13 +55,19 @@ class MainActivity : ComponentActivity() {
                                 content = "메세지 입니다 ${clickCount.value}"
                             )
                             /** 1-2 messageList 상태 변경 발생 */
+                            /** 1-2 messageList 상태 변경 발생 */
                             messageList.add(newMsg)
                         })
 
                         /** 1-3 messageList 상태를 내려줍니다. */
+
+                        /** 1-3 messageList 상태를 내려줍니다. */
+                        /** 2-1 onDeleteClicked 이벤트 발생 */
                         /** 2-1 onDeleteClicked 이벤트 발생 */
                         /** 2-3 messageList 상태를 내려줍니다. */
+                        /** 2-3 messageList 상태를 내려줍니다. */
                         MessageList(messages = messageList, onDeleteClicked = {
+                            /** 2-2 messageList 상태 변경 발생 */
                             /** 2-2 messageList 상태 변경 발생 */
                             messageList.remove(it)
                         })
@@ -114,17 +122,25 @@ fun DefaultPreview() {
     MemoJetpackComposeTheme {
 
         /** 전체 메세지 리스트 상태 */
-        val messageList: SnapshotStateList<Message> = remember { mutableStateListOf<Message>().apply {
-            add(
-                Message(
-                    id = 1,
-                    content = "메세지 입니다"
+        val messageList: SnapshotStateList<Message> = remember {
+            mutableStateListOf<Message>().apply {
+                add(
+                    Message(
+                        id = 1,
+                        content = "메세지 입니다"
+                    )
                 )
-            )
-        } }
+            }
+        }
 
-        Surface(
-            modifier = Modifier.fillMaxSize()
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                TopAppBar(
+                    title = { Text(text = "메모 리스트") },
+                    backgroundColor = Color.LightGray
+                )
+            }
         ) {
             MessageList(messages = messageList, onDeleteClicked = {
                 messageList.remove(it)

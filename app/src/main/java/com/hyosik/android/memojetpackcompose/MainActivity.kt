@@ -15,6 +15,9 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.glide.rememberGlidePainter
@@ -45,34 +48,29 @@ class MainActivity : ComponentActivity() {
                     },
                     floatingActionButtonPosition = FabPosition.End,
                     floatingActionButton = {
-                        FloatingActionButton(onClick = { /*TODO*/ }) {
-                            Text(text = "클릭!!")
+                        /** 1-1 onClicked 이벤트 발생  */
+                        FloatingActionButton(
+                            onClick = {
+                                clickCount.value += 1
+                                val newMsg = Message(
+                                    id = clickCount.value,
+                                    content = "메세지 입니다 ${clickCount.value}"
+                                )
+                                /** 1-2 messageList 상태 변경 발생 */
+                                messageList.add(newMsg)
+                            },
+                            backgroundColor = colorResource(id = R.color.purple_200),
+                            modifier = Modifier.padding(end = 10.dp , bottom = 10.dp)
+                            ) {
+                            Image(painter = painterResource(id = R.drawable.ic_add), contentDescription = "")
                         }
                     }
                 ) {
                     Column() {
-                        /** 1-1 onClicked 이벤트 발생  */
-                        /** 1-1 onClicked 이벤트 발생  */
-                        AddMessage(onClicked = {
-                            clickCount.value += 1
-                            val newMsg = Message(
-                                id = clickCount.value,
-                                content = "메세지 입니다 ${clickCount.value}"
-                            )
-                            /** 1-2 messageList 상태 변경 발생 */
-                            /** 1-2 messageList 상태 변경 발생 */
-                            messageList.add(newMsg)
-                        })
-
-                        /** 1-3 messageList 상태를 내려줍니다. */
-
                         /** 1-3 messageList 상태를 내려줍니다. */
                         /** 2-1 onDeleteClicked 이벤트 발생 */
-                        /** 2-1 onDeleteClicked 이벤트 발생 */
-                        /** 2-3 messageList 상태를 내려줍니다. */
                         /** 2-3 messageList 상태를 내려줍니다. */
                         MessageList(messages = messageList, onDeleteClicked = {
-                            /** 2-2 messageList 상태 변경 발생 */
                             /** 2-2 messageList 상태 변경 발생 */
                             messageList.remove(it)
                         })
@@ -80,13 +78,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun AddMessage(onClicked: () -> Unit) {
-    Button(onClick = onClicked) {
-        Text(text = "메세지 추가")
     }
 }
 
@@ -110,7 +101,10 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
             ) {
                 Text(text = "id : ${msg.id}")
                 Text(text = "msg: ${msg.content}")
-                Button(onClick = { onDeleteClicked(msg) }, modifier = Modifier.padding(top = 10.dp)) {
+                Button(
+                    onClick = { onDeleteClicked(msg) },
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
                     Text(text = "삭제")
                 }
             }

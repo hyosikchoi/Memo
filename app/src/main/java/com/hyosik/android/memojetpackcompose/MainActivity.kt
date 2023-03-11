@@ -1,15 +1,12 @@
 package com.hyosik.android.memojetpackcompose
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.glide.rememberGlidePainter
 import com.hyosik.android.memojetpackcompose.ui.theme.MemoJetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -102,14 +100,21 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
         border = BorderStroke(1.dp, color = Color.LightGray),
         elevation = 10.dp
     ) {
-        Column(
+        Row(
             Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "id : ${msg.id} / msg: ${msg.content}")
-            Button(onClick = { onDeleteClicked(msg) }, modifier = Modifier.padding(top = 10.dp)) {
-                Text(text = "삭제")
+            LoadImageFromUrl(imageUrl = "https://fastly.picsum.photos/id/1048/200/200.jpg?hmac=W94UjOBeBuqxyKnyhht4a81ruXiXHpjQxvdZtNgGyow")
+            Column(
+                Modifier.padding(start = 10.dp)
+            ) {
+                Text(text = "id : ${msg.id}")
+                Text(text = "msg: ${msg.content}")
+                Button(onClick = { onDeleteClicked(msg) }, modifier = Modifier.padding(top = 10.dp)) {
+                    Text(text = "삭제")
+                }
             }
+
         }
     }
 }
@@ -121,6 +126,21 @@ fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
             MessageRow(msg = message, onDeleteClicked = onDeleteClicked)
         }
     }
+}
+
+@Composable
+fun LoadImageFromUrl(imageUrl: String) {
+    Image(
+        painter = rememberGlidePainter(
+            request = imageUrl,
+            requestBuilder = {
+                this.placeholder(R.drawable.ic_launcher_foreground)
+                    .circleCrop()
+            }
+        ),
+        contentDescription = "Image from $imageUrl",
+        modifier = Modifier.size(100.dp)
+    )
 }
 
 @Preview(showBackground = false)

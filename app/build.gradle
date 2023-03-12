@@ -60,7 +60,11 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
+    // Glide Compose
     implementation "com.google.accompanist:accompanist-glide:$glide_version"
+
+    // Lottie Compose
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
 
 
 }

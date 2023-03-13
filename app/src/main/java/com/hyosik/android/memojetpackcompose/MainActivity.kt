@@ -194,6 +194,5 @@ fun DefaultPreview() {
                 messageList.remove(it)
             })
         }
-
     }
 }

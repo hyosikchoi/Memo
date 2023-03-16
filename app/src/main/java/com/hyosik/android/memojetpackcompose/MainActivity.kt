@@ -3,6 +3,7 @@ package com.hyosik.android.memojetpackcompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -27,18 +28,15 @@ import com.hyosik.android.memojetpackcompose.ui.theme.MemoJetpackComposeTheme
 import com.hyosik.android.memojetpackcompose.ui.theme.Pink200
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MemoJetpackComposeTheme {
 
-                /** 메세지 아이디 카운트 상태 */
-                val clickCount: MutableState<Int> = remember {
-                    mutableStateOf(0)
-                }
-
-                /** 전체 메세지 리스트 상태 */
-                val messageList: SnapshotStateList<Message> = remember { mutableStateListOf() }
+                val messageList by viewModel.messageList.collectAsState()
 
                 /** Lottie Animation Resource 정의 */
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_add))
@@ -64,16 +62,9 @@ class MainActivity : ComponentActivity() {
                     },
                     floatingActionButtonPosition = FabPosition.End,
                     floatingActionButton = {
-                        /** 1-1 onClicked 이벤트 발생  */
                         FloatingActionButton(
                             onClick = {
-                                clickCount.value += 1
-                                val newMsg = Message(
-                                    id = clickCount.value,
-                                    content = "메세지 입니다 ${clickCount.value}"
-                                )
-                                /** 1-2 messageList 상태 변경 발생 */
-                                messageList.add(newMsg)
+                                viewModel.addMessage()
                             },
                             backgroundColor = Pink200,
                             modifier = Modifier.padding(end = 10.dp , bottom = 10.dp)
@@ -94,7 +85,7 @@ class MainActivity : ComponentActivity() {
                         /** 2-3 messageList 상태를 내려줍니다. */
                         MessageList(messages = messageList, onDeleteClicked = {
                             /** 2-2 messageList 상태 변경 발생 */
-                            messageList.remove(it)
+                            viewModel.removeMessage(it)
                         })
                     }
                 }

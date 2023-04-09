@@ -113,6 +113,7 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
                 Modifier.padding(start = 10.dp)
             ) {
                 Text(text = "id : ${msg.id}")
+                Spacer(modifier = Modifier.padding(top = 5.dp))
                 Text(text = "msg: ${msg.content}")
                 Button(
                     onClick = { onDeleteClicked(msg) },

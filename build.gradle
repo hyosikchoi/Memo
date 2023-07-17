@@ -3,6 +3,7 @@ buildscript {
         compose_version = '1.1.0-beta01'
         glide_version = '0.10.0'
         lottieVersion = '6.0.0'
+        nav_version = '2.5.3'
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

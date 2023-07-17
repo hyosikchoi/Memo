@@ -1,11 +1,14 @@
 package com.hyosik.android.memojetpackcompose
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,14 +19,12 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import com.google.accompanist.glide.rememberGlidePainter
+import com.hyosik.android.memojetpackcompose.ui.detail.DetailActivity
 import com.hyosik.android.memojetpackcompose.ui.theme.MemoJetpackComposeTheme
 import com.hyosik.android.memojetpackcompose.ui.theme.Pink200
 
@@ -96,10 +97,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
+
+    val context = LocalContext.current
+
     Surface(
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable { navigateToDetailActivity(context,msg.id,msg.content) }
+        ,
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(1.dp, color = Color.LightGray),
         elevation = 10.dp
@@ -187,4 +193,12 @@ fun DefaultPreview() {
             })
         }
     }
+}
+
+
+fun navigateToDetailActivity(context: Context, id: Int, content: String) {
+    val intent = Intent(context, DetailActivity::class.java)
+    intent.putExtra("id",id)
+    intent.putExtra("content", content)
+    context.startActivity(intent)
 }

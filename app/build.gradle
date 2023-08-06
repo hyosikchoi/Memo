@@ -70,4 +70,8 @@ dependencies {
     // navigation Compose
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    // Tab + ViewPager
+    implementation "com.google.accompanist:accompanist-pager:$accompanist_pager"
+    implementation "com.google.accompanist:accompanist-pager-indicators:$accompanist_pager"
+
 }

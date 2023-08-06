@@ -13,30 +13,71 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.pagerTabIndicatorOffset
+import com.google.accompanist.pager.rememberPagerState
 import com.hyosik.android.memojetpackcompose.ui.component.MessageList
 import com.hyosik.android.memojetpackcompose.ui.detail.DetailActivity
+import com.hyosik.android.memojetpackcompose.ui.screen.ImportantMemoListScreen
 import com.hyosik.android.memojetpackcompose.ui.screen.MemoScreen
 import com.hyosik.android.memojetpackcompose.ui.theme.MemoJetpackComposeTheme
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels()
+
+    private val pages = listOf("메모", "중요")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MemoJetpackComposeTheme {
-                // Android material design 과 흡사하다고 보면 된다.
-                Scaffold(
+                Column(
                     modifier = Modifier.fillMaxSize(),
-                    topBar = {
-                        TopAppBar(
-                            title = { Text(text = "메모 리스트") },
-                            backgroundColor = Color.LightGray
-                        )
-                    },
                 ) {
-                   MemoScreen(viewModel = viewModel)
+                    val pagerState = rememberPagerState()
+                    val coroutineScope = rememberCoroutineScope()
+
+                    TabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                            )
+                        }
+                    ) {
+                        pages.forEachIndexed { index, title ->
+                            Tab(
+                                text = { Text(text = title) },
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.scrollToPage(index)
+                                    }
+                                },
+
+                            )
+                        }
+                    }
+
+                    HorizontalPager(
+                        count = pages.size,
+                        state = pagerState
+                    ) {page: Int ->
+                        when(page) {
+                            0 -> {
+                                MemoScreen(viewModel = viewModel)
+                            }
+                            1 -> {
+                                ImportantMemoListScreen()
+                            }
+                        }
+
+                    }
+
                 }
             }
         }

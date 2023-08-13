@@ -32,4 +32,11 @@ class MainViewModel : ViewModel() {
         _messageList.value = beforeMessageList.toList()
     }
 
+    fun updateIsLike(msgId: Int, isLike: Boolean) {
+        _messageList.value = _messageList.value.map { msg: Message ->
+            if(msg.id == msgId) msg.copy(isLike = isLike)
+            else msg
+        }
+    }
+
 }

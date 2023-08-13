@@ -28,7 +28,11 @@ import com.hyosik.android.memojetpackcompose.navigateToDetailActivity
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
+fun MessageList(
+    messages: List<Message>,
+    onDeleteClicked: (Message) -> Unit,
+    onCheckedChange: (Pair<Int, Boolean>) -> Unit
+) {
     LazyColumn {
         // 0 ~ 9 = 0 , 10 ~ 19 = 1
         val groupedItems = messages.groupBy { it.id / 10 }
@@ -52,14 +56,22 @@ fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
             items(
                 messageList
             ) { message ->
-                MessageRow(msg = message, onDeleteClicked = onDeleteClicked)
+                MessageRow(
+                    msg = message,
+                    onDeleteClicked = onDeleteClicked,
+                    onCheckedChange = onCheckedChange
+                )
             }
         }
     }
 }
 
 @Composable
-fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
+fun MessageRow(
+    msg: Message,
+    onDeleteClicked: (Message) -> Unit,
+    onCheckedChange: (Pair<Int, Boolean>) -> Unit
+) {
 
     val context = LocalContext.current
 
@@ -73,7 +85,9 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
         elevation = 10.dp
     ) {
         Row(
-            Modifier.padding(16.dp),
+            Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             LoadImageFromUrl(imageUrl = "https://fastly.picsum.photos/id/1048/200/200.jpg?hmac=W94UjOBeBuqxyKnyhht4a81ruXiXHpjQxvdZtNgGyow")
@@ -90,7 +104,7 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
                     Text(text = "삭제")
                 }
             }
-            CheckBoxWithImg()
+            CheckBoxWithImg(msg, onCheckedChange)
         }
     }
 }
@@ -111,23 +125,24 @@ fun LoadImageFromUrl(imageUrl: String) {
 }
 
 @Composable
-fun CheckBoxWithImg() {
-    var isChecked by remember { mutableStateOf(false) }
+fun CheckBoxWithImg(msg: Message, onCheckedChange: (Pair<Int, Boolean>) -> Unit) {
 
-    val imageResource = if (isChecked) {
+    val imageResource = if (msg.isLike) {
         painterResource(id = R.drawable.ic_checked)
     } else {
         painterResource(id = R.drawable.ic_unchecked)
     }
     Box(
         modifier = Modifier
-            .size(24.dp)
-            .clickable { isChecked = !isChecked }
+            .fillMaxWidth(),
+        contentAlignment = Alignment.CenterEnd
     ) {
         Image(
             painter = imageResource,
             contentDescription = null, // Content description for accessibility
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .size(24.dp)
+                .clickable { onCheckedChange(Pair(msg.id, msg.isLike.not())) },
             contentScale = ContentScale.Fit
         )
     }

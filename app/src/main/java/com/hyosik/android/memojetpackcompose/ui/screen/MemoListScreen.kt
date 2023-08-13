@@ -74,7 +74,11 @@ fun MemoScreen(
 
                 /** 2-2 messageList 상태 변경 발생 */
                 viewModel.removeMessage(it)
-            })
+            },
+                onCheckedChange = {
+                    viewModel.updateIsLike(msgId = it.first, isLike = it.second)
+                }
+            )
         }
     }
 }

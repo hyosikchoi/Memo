@@ -8,14 +8,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,7 +51,7 @@ fun MessageList(messages: List<Message>, onDeleteClicked: (Message) -> Unit) {
 
             items(
                 messageList
-            ) {message ->
+            ) { message ->
                 MessageRow(msg = message, onDeleteClicked = onDeleteClicked)
             }
         }
@@ -90,7 +90,7 @@ fun MessageRow(msg: Message, onDeleteClicked: (Message) -> Unit) {
                     Text(text = "삭제")
                 }
             }
-
+            CheckBoxWithImg()
         }
     }
 }
@@ -108,4 +108,27 @@ fun LoadImageFromUrl(imageUrl: String) {
         contentDescription = "Image from $imageUrl",
         modifier = Modifier.size(100.dp)
     )
+}
+
+@Composable
+fun CheckBoxWithImg() {
+    var isChecked by remember { mutableStateOf(false) }
+
+    val imageResource = if (isChecked) {
+        painterResource(id = R.drawable.ic_checked)
+    } else {
+        painterResource(id = R.drawable.ic_unchecked)
+    }
+    Box(
+        modifier = Modifier
+            .size(24.dp)
+            .clickable { isChecked = !isChecked }
+    ) {
+        Image(
+            painter = imageResource,
+            contentDescription = null, // Content description for accessibility
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Fit
+        )
+    }
 }

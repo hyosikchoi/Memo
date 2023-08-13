@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
                                         pagerState.scrollToPage(index)
                                     }
                                 },
-
                             )
                         }
                     }
@@ -80,44 +79,6 @@ class MainActivity : ComponentActivity() {
 
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = false)
-@Composable
-fun DefaultPreview() {
-    MemoJetpackComposeTheme {
-        /** 전체 메세지 리스트 상태 */
-        val messageList: SnapshotStateList<Message> = remember {
-            mutableStateListOf<Message>().apply {
-                add(
-                    Message(
-                        id = 1,
-                        content = "메세지 입니다"
-                    )
-                )
-            }
-        }
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                TopAppBar(
-                    title = { Text(text = "메모 리스트") },
-                    backgroundColor = Color.LightGray
-                )
-            },
-            floatingActionButtonPosition = FabPosition.End,
-            floatingActionButton = {
-                FloatingActionButton(onClick = { /*TODO*/ }) {
-                    Text(text = "클릭!!")
-                }
-            }
-        ) {
-            MessageList(messages = messageList, onDeleteClicked = {
-                messageList.remove(it)
-            })
         }
     }
 }
